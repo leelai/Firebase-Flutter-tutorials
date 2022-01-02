@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.firebase_messaging_tutorial">
+    package="com.ciot.android.app">
    <application
         android:label="Firebase Messaging"
         android:icon="@mipmap/ic_launcher">

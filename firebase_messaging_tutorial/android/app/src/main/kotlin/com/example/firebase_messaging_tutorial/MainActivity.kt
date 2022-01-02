@@ -1,4 +1,4 @@
-package com.example.firebase_messaging_tutorial
+package com.ciot.android.app
 
 import io.flutter.embedding.android.FlutterActivity
 
