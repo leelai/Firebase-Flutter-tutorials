@@ -13,7 +13,7 @@ class NumberConfirmView extends StatefulWidget {
 }
 
 class _NumberConfirmViewState extends State<NumberConfirmView> {
-  final myController = TextEditingController();
+  final myController = TextEditingController(text: '4321');
   int count = 60;
   late Timer timer;
 
@@ -83,7 +83,6 @@ class _NumberConfirmViewState extends State<NumberConfirmView> {
                         'code': code,
                         'token': token
                       });
-                      print(url);
                       var response = await http.get(url);
                       if (response.statusCode == 200) {
                         var jsonResponse = convert.jsonDecode(response.body)
