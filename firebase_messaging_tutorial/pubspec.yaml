@@ -29,6 +29,8 @@ dependencies:
     firebase_messaging: ^10.0.9
     flutter:
         sdk: flutter
+    flutter_local_notifications: ^9.2.0
+    http: ^0.13.4
     path_provider: ^2.0.8
     shared_preferences: ^2.0.11
     webview_flutter: ^3.0.0
@@ -74,3 +76,4 @@ flutter:
     # see https://flutter.dev/custom-fonts/#from-packages
     assets:
         - assets/audios/
+        - assets/translations/

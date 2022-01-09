@@ -1,0 +1,19 @@
+{
+    "setups":"Setups",
+    "main_page":"Main Page:",
+    "set_up":"Set up",
+    "default_url":"ciot.tw",
+    "server":"Server:",
+    "default_server_url":"app.ciot.tw",
+    "notification_number":"Notification number:",
+    "notification_number_setting":"Notification Number Setting",
+    "nns_msg":"A confirmation code has been sent to your phone.\nPlease enter confirmation code within {} sec...",
+    "please_enter_code":"Please enter the confirmation code：",
+    "enter":"Enter",
+    "user":"ciot",
+    "error":"Error",
+    "error2":"Fail:{}",
+    "success":"Success",
+    "notification":"Notification",
+    "ok":"OK"
+ }

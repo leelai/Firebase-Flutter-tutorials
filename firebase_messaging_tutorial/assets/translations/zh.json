@@ -1,0 +1,19 @@
+{
+    "setup":"設定",
+    "main_page":"主畫面：",
+    "set_up":"完成",
+    "default_url":"ciot.tw",
+    "server":"伺服器：",
+    "default_server_url":"app.ciot.tw",
+    "notification_number":"推播門號：",
+    "notification_number_setting":"推播門號設定",
+    "nns_msg":"已將確認碼發送至您的手機，\n請在{}秒內輸入確認碼，\n並按確認。",
+    "please_enter_code":"請輸入確認碼：",
+    "enter":"確認",
+    "user":"ciot",
+    "error":"失敗",
+    "error2":"失敗:{}",
+    "success":"成功",
+    "notification":"通知",
+    "ok":"確認"
+ }

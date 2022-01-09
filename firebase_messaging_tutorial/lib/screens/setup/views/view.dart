@@ -1,6 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class SetupView extends StatefulWidget {
   @override
@@ -8,48 +10,64 @@ class SetupView extends StatefulWidget {
 }
 
 class _SetupViewState extends State<SetupView> {
-  String _content = '';
-  final myController = TextEditingController();
+  final mainPageText = TextEditingController();
+  final serverUrlText = TextEditingController();
+  final phoneText = TextEditingController();
 
-  void _handleChange() {
-    setState(() {
-      _content = myController.text;
-    });
-  }
-
-  @override
   void initState() {
     super.initState();
-    myController.addListener(_handleChange);
-  }
 
-  void _onChanged(String value) {
-    setState(() {
-      _content = value;
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        mainPageText.text = value.getString('main_page') ?? '';
+        serverUrlText.text = value.getString('server_url') ?? '';
+        phoneText.text = value.getString('phone') ?? '';
+      });
     });
   }
 
-  var upperPartGroup = Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Main page:'),
-          Flexible(child: TextField(onChanged: (String value) {})),
-        ],
-      ),
-      Card(
-          child: InkWell(
-              onTap: () {},
+  Widget upperPartGroup() {
+    var upperPartGroup = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('main_page').tr(),
+            Flexible(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Setup'),
-              ))),
-    ],
-  );
+                child: TextField(
+                  controller: mainPageText,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Card(
+            child: InkWell(
+                onTap: () async {
+                  if (mainPageText.text.isEmpty) return;
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setString('main_page', mainPageText.text);
+                  // await prefs.setString(
+                  //     'main_page',
+                  //     mainPageText.text.startsWith('http://')
+                  //         ? mainPageText.text
+                  //         : 'http://' + mainPageText.text);
+                  Navigator.pushReplacementNamed(context, '/webview');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('set_up').tr(),
+                ))),
+      ],
+    );
+    return upperPartGroup;
+  }
 
   Widget lowerPartGroup(BuildContext context) {
     var lowerPartGroup = Column(
@@ -59,26 +77,61 @@ class _SetupViewState extends State<SetupView> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Server:'),
-            Flexible(child: TextField(onChanged: (String value) {})),
+            const Text('server').tr(),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: serverUrlText,
+                ),
+              ),
+            ),
           ],
         ),
         Padding(
           padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-          child: const Text('Notification number:'),
+          child: const Text('notification_number').tr(),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(child: TextField(onChanged: (String value) {})),
+            Flexible(
+              child: TextField(
+                controller: phoneText,
+              ),
+            ),
             Card(
                 child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/confirm');
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      var serverUrl = serverUrlText.text;
+                      await prefs.setString('server_url', serverUrl);
+                      await prefs.setString('phone', phoneText.text);
+
+                      var url = Uri.http(serverUrl, '/PushPhone.ashx',
+                          {'phone': phoneText.text, 'user': 'ciot'});
+                      var response = await http.get(url);
+                      if (response.statusCode == 200) {
+                        var jsonResponse = convert.jsonDecode(response.body)
+                            as Map<String, dynamic>;
+                        if (jsonResponse['state'] == 'ok') {
+                          Navigator.pushNamed(context, '/confirm');
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('error').tr(),
+                          ));
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'Request failed with status: ${response.statusCode}.'),
+                        ));
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Setup'),
+                      child: Text('setups').tr(),
                     )))
           ],
         ),
@@ -91,7 +144,7 @@ class _SetupViewState extends State<SetupView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setup'),
+        title: const Text('setups').tr(),
       ),
       // We're using a Builder here so we have a context that is below the Scaffold
       // to allow calling Scaffold.of(context) so we can show a snackbar.
@@ -101,7 +154,7 @@ class _SetupViewState extends State<SetupView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              upperPartGroup,
+              upperPartGroup(),
               Divider(),
               lowerPartGroup(context),
             ],
