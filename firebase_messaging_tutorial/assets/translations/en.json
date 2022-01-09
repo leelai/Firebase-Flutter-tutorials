@@ -15,5 +15,6 @@
     "error2":"Fail:{}",
     "success":"Success",
     "notification":"Notification",
-    "ok":"OK"
+    "ok":"OK",
+    "refresh":"Refresh"
  }

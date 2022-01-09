@@ -1,5 +1,5 @@
 {
-    "setup":"設定",
+    "setups":"設定",
     "main_page":"主畫面：",
     "set_up":"完成",
     "default_url":"ciot.tw",
@@ -15,5 +15,6 @@
     "error2":"失敗:{}",
     "success":"成功",
     "notification":"通知",
-    "ok":"確認"
+    "ok":"確認",
+    "refresh":"重整"
  }

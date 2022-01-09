@@ -94,30 +94,36 @@ class NavigationControls extends StatelessWidget {
         final WebViewController? controller = snapshot.data;
         return Row(
           children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: !webViewReady
-                  ? null
-                  : () async {
-                      if (await controller!.canGoBack()) {
-                        await controller.goBack();
-                      }
-                    },
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: !webViewReady
-                  ? null
-                  : () async {
-                      if (await controller!.canGoForward()) {
-                        await controller.goForward();
-                      }
-                    },
-            ),
-            IconButton(
-              icon: const Icon(Icons.replay),
-              onPressed: !webViewReady ? null : () => controller!.reload(),
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.arrow_back_ios),
+            //   onPressed: !webViewReady
+            //       ? null
+            //       : () async {
+            //           if (await controller!.canGoBack()) {
+            //             await controller.goBack();
+            //           }
+            //         },
+            // ),
+            // IconButton(
+            //   icon: const Icon(Icons.arrow_forward_ios),
+            //   onPressed: !webViewReady
+            //       ? null
+            //       : () async {
+            //           if (await controller!.canGoForward()) {
+            //             await controller.goForward();
+            //           }
+            //         },
+            // ),
+            // IconButton(
+            //   icon: const Icon(Icons.replay),
+            //   onPressed: !webViewReady ? null : () => controller!.reload(),
+            // ),
+            InkWell(
+                onTap: !webViewReady ? null : () => controller!.reload(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('refresh').tr(),
+                ))
           ],
         );
       },
