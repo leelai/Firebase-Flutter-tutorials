@@ -49,6 +49,24 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "app"
+    productFlavors {
+
+        ciot {
+            dimension "app"
+            applicationId "com.ciot.android.app"
+            versionCode 1
+            versionName "1.0"
+        }
+
+        siot {
+            dimension "app"
+            applicationId "com.siot.android.app"
+            versionCode 1
+            versionName "1.0"
+        }
+    }
 }
 
 flutter {
