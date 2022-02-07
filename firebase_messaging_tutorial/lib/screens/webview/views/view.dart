@@ -6,6 +6,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_messaging_tutorial/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,13 @@ class _MyWebViewState extends State<MyWebView> {
   void initState() {
     super.initState();
     WebView.platform = SurfaceAndroidWebView();
+
+    Util.initFirebase(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
