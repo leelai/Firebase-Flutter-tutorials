@@ -54,17 +54,19 @@ class _NumberConfirmViewState extends State<NumberConfirmView> {
           children: [
             Text('nns_msg').tr(args: [count.toString()]),
             SizedBox(height: 20),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('please_enter_code').tr(),
-                Flexible(
-                  child: TextField(
-                    controller: myController,
-                  ),
-                ),
-              ],
-            ),
+            const Text('please_enter_code').tr(),
+            TextField(controller: myController),
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   children: [
+            //     const Text('please_enter_code').tr(),
+            //     Flexible(
+            //       child: TextField(
+            //         controller: myController,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Card(
                 child: InkWell(
                     onTap: () async {
@@ -91,7 +93,14 @@ class _NumberConfirmViewState extends State<NumberConfirmView> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('success').tr(),
                           ));
-                          Navigator.pushReplacementNamed(context, '/webview');
+                          SharedPreferences.getInstance().then((prefs) {
+                            var routeName =
+                                (prefs.getString('main_page') ?? "").isEmpty
+                                    ? "/setup"
+                                    : '/webview';
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, routeName, (r) => false);
+                          });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('error').tr(),

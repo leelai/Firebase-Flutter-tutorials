@@ -33,12 +33,22 @@ class _MyWebViewState extends State<MyWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return InkWell(
+        titleSpacing: 8,
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return InkWell(
+        //         onTap: () => Navigator.pushNamed(context, '/setup'),
+        //         child: Center(child: Text('setupssssss').tr()));
+        //   },
+        // ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
                 onTap: () => Navigator.pushNamed(context, '/setup'),
-                child: Center(child: Text('setups').tr()));
-          },
+                child: Center(child: Text('setups').tr())),
+          ],
         ),
         actions: <Widget>[
           NavigationControls(_controller.future),
