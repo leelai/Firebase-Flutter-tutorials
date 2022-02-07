@@ -6,10 +6,12 @@
 
 import 'dart:async';
 
+import 'package:device_display_brightness/device_display_brightness.dart';
 import 'package:firebase_messaging_tutorial/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp(MaterialApp(home: MyWebView()));
@@ -33,12 +35,10 @@ class _MyWebViewState extends State<MyWebView> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
+    DeviceDisplayBrightness.keepOn(enabled: true);
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 8,
