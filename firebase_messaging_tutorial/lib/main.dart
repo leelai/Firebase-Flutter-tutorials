@@ -1,14 +1,15 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/number_confirm/number_confirm.dart';
 import 'screens/setup/setup.dart';
 import 'screens/webview/webview.dart';
+import 'package:package_info/package_info.dart';
 
 Future<void> _init() async {
   //notification channel
@@ -46,19 +47,20 @@ void main() async {
   await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
   _init();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  var isSiot = packageInfo.packageName.contains('siot');
 
-  runApp(EasyLocalization(
-    supportedLocales: [
-      Locale('en'),
-      Locale('zh'),
-    ],
-    path: 'assets/translations',
-    fallbackLocale: Locale('en'),
-    child: FcmPOC(),
-    // fallbackLocale: Locale('en', 'US'),
-    // startLocale: Locale('de', 'DE'),
-    // saveLocale: false,
-  ));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(EasyLocalization(
+            supportedLocales: [
+              Locale('en'),
+              Locale('zh'),
+            ],
+            path: 'assets/translations',
+            fallbackLocale: Locale('en'),
+            child: FcmPOC(),
+            startLocale: isSiot ? Locale('zh') : Locale('en'),
+          )));
 }
 
 class FcmPOC extends StatelessWidget {
@@ -101,48 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    messaging = FirebaseMessaging.instance;
-    //todo: need it?
-    messaging.subscribeToTopic("messaging");
-    messaging.getToken().then((value) {
-      print(value);
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved");
-      print(event.notification?.android?.sound);
-      var sound = event.notification?.android?.sound ?? "alarm01";
-      print(sound);
-      AssetsAudioPlayer.newPlayer().open(
-        Audio("assets/audios/" + sound + '.mp3'),
-        autoStart: true,
-        showNotification: false,
-      );
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("notification").tr(),
-              content: Text(event.notification!.body!),
-              actions: [
-                TextButton(
-                  child: Text("ok").tr(),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!');
-    });
 
     SharedPreferences.getInstance().then((prefs) {
       if ((prefs.getString('main_page') ?? "").isEmpty) {
-        Navigator.pushReplacementNamed(context, '/setup');
+        Navigator.pushNamedAndRemoveUntil(context, "/setup", (r) => false);
       }
     });
   }
