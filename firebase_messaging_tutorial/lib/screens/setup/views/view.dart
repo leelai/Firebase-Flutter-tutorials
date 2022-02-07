@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:clipboard/clipboard.dart';
 
 class SetupView extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class _SetupViewState extends State<SetupView> {
   final mainPageText = TextEditingController();
   final serverUrlText = TextEditingController();
   final phoneText = TextEditingController();
+  String token = '';
 
   void initState() {
     super.initState();
@@ -22,6 +25,13 @@ class _SetupViewState extends State<SetupView> {
         mainPageText.text = value.getString('main_page') ?? '';
         serverUrlText.text = value.getString('server_url') ?? '';
         phoneText.text = value.getString('phone') ?? '';
+      });
+    });
+
+    FirebaseMessaging.instance.getToken().then((value) {
+      if (value == null) return;
+      setState(() {
+        token = value;
       });
     });
   }
@@ -157,6 +167,22 @@ class _SetupViewState extends State<SetupView> {
               upperPartGroup(),
               Divider(),
               lowerPartGroup(context),
+              InkWell(
+                  onTap: () {
+                    FlutterClipboard.copy(token).then(
+                        (value) => ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                '已複製',
+                              )),
+                            ));
+                  },
+                  child: Text(
+                    token,
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .apply(fontSizeFactor: 0.2),
+                  )),
             ],
           ),
         ),
